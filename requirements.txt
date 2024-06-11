@@ -1,0 +1,4 @@
+timeago
+dotenv
+google-generativeai
+beautifulsoup4
