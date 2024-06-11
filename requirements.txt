@@ -1,4 +1,4 @@
 timeago
-dotenv
+python-dotenv
 google-generativeai
 beautifulsoup4
