@@ -9,10 +9,7 @@ load_dotenv()
 prod_mode = False
 
 TELEGRAM_BOT_TOKEN = os.getenv('TG_BOT_TOKEN')
-if prod_mode:
-    TELEGRAM_CHAT_ID = '@hnbriefs'
-else:
-    TELEGRAM_CHAT_ID = '@hnbriefs_test'
+TELEGRAM_CHAT_ID = os.getenv('TG_CHAT_ID')
 
 
 def send_message(text, reply_markup=None):
