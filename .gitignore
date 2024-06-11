@@ -3,3 +3,4 @@
 lib
 app.yaml
 setup.cfg
+.env
