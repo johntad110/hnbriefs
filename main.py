@@ -2,9 +2,10 @@ import time
 import datetime
 import timeago
 from apis.hn import get_top_stories, get_story_details
-from apis.telegram import send_message
+from apis.telegram import send_message, get_last_hundred_messages, client
 from summarizer import summarize_story
 from cachetools import TTLCache
+from utils import extract_hn_ids
 
 # Initialize an in-memory cache with a TTL of 3 days
 cache = TTLCache(maxsize=1000, ttl=60 * 60 * 24 * 3)
@@ -14,7 +15,24 @@ FOUR_HOURS = datetime.timedelta(hours=4)
 TWO_DAYS = datetime.timedelta(days=2)
 
 
-def main():
+async def initialize_cache_from_channel():
+    """Read the last hundred messages from the channel and cache the Hacker News item IDs."""
+    try:
+        messages = await get_last_hundred_messages()
+        for message in messages:
+            text = message.message if message.message else ''
+            hn_ids = extract_hn_ids(text)
+            for hn_id in hn_ids:
+                print(f"caching {hn_id}")
+                cache[int(hn_id)] = True
+        print("Initialized cache with IDs from the channel.")
+    except Exception as e:
+        print(f"Error initializing cache from channel: {e}")
+
+
+async def main():
+    await initialize_cache_from_channel()
+
     while True:
         start_time = time.time()
         try:
@@ -101,4 +119,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    with client:
+        client.loop.run_until_complete(main())

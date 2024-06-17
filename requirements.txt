@@ -2,3 +2,4 @@ timeago
 python-dotenv
 google-generativeai
 beautifulsoup4
+telethon
