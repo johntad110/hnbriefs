@@ -15,23 +15,19 @@ FOUR_HOURS = datetime.timedelta(hours=4)
 TWO_DAYS = datetime.timedelta(days=2)
 
 
-def initialize_cache_from_channel():
-    """Read the last hundred messages from the channel and cache the Hacker News item IDs."""
+def read_message_ids_from_file():
     try:
-        messages = get_last_hundred_messages()
-        for message in messages:
-            text = message.message if message.message else ''
-            hn_ids = extract_hn_ids(text)
-            for hn_id in hn_ids:
-                print(f"caching {hn_id}")
-                cache[int(hn_id)] = True
-        print("Initialized cache with IDs from the channel.")
+        with open('message_ids.txt', 'r') as f:
+            ids = [int(line.strip()) for line in f.readlines()]
+        for hn_id in ids:
+            cache[hn_id] = True
+        print("Message IDs have been read from message_ids.txt and cached.")
     except Exception as e:
-        print(f"Error initializing cache from channel: {e}")
+        print(f"Error reading message IDs from file: {e}")
 
 
 def main():
-    initialize_cache_from_channel()
+    read_message_ids_from_file()
 
     while True:
         start_time = time.time()
