@@ -2,7 +2,7 @@ import time
 import datetime
 import timeago
 from apis.hn import get_top_stories, get_story_details
-from apis.telegram import send_message, get_last_hundred_messages, client
+from apis.telegram import send_message, get_last_hundred_messages
 from summarizer import summarize_story
 from cachetools import TTLCache
 from utils import extract_hn_ids
@@ -15,10 +15,10 @@ FOUR_HOURS = datetime.timedelta(hours=4)
 TWO_DAYS = datetime.timedelta(days=2)
 
 
-async def initialize_cache_from_channel():
+def initialize_cache_from_channel():
     """Read the last hundred messages from the channel and cache the Hacker News item IDs."""
     try:
-        messages = await get_last_hundred_messages()
+        messages = get_last_hundred_messages()
         for message in messages:
             text = message.message if message.message else ''
             hn_ids = extract_hn_ids(text)
@@ -30,8 +30,8 @@ async def initialize_cache_from_channel():
         print(f"Error initializing cache from channel: {e}")
 
 
-async def main():
-    await initialize_cache_from_channel()
+def main():
+    initialize_cache_from_channel()
 
     while True:
         start_time = time.time()
@@ -119,5 +119,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    with client:
-        client.loop.run_until_complete(main())
+    main()

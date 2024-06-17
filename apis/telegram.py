@@ -2,7 +2,6 @@ import requests
 import os
 from dotenv import load_dotenv
 import json
-from telethon import TelegramClient
 
 
 load_dotenv()
@@ -11,12 +10,6 @@ prod_mode = False
 
 TELEGRAM_BOT_TOKEN = os.getenv('TG_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TG_CHAT_ID')
-
-api_id = os.getenv('API_ID')
-api_hash = os.getenv('API_HASH')
-phone_number = os.getenv('PHONE_NUMBER')
-
-client = TelegramClient('session_name', api_id, api_hash)
 
 
 def send_message(text, reply_markup=None):
@@ -40,13 +33,22 @@ def send_message(text, reply_markup=None):
     return None
 
 
-async def get_last_hundred_messages():
+def get_last_hundred_messages():
     """Fetch the last hundred messages from the Telegram channel."""
-    messages = []
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getUpdates"
+    params = {
+        "limit": 100,
+        "offset": -100  # Fetches the last 100 messages.
+    }
+
     try:
-        async for message in client.iter_messages(TELEGRAM_CHAT_ID, limit=100):
-            messages.append(message)
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        updates = response.json().get('result', [])
+        messages = [update['message'] for update in updates if 'message' in update]
+        for message in messages:
             print(message)
+        return messages
     except Exception as e:
         print(f"Error fetching messages from Telegram: {e}")
-    return messages
+    return []
