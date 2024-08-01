@@ -8,7 +8,7 @@ from cachetools import TTLCache
 from utils import extract_hn_ids
 
 # Initialize an in-memory cache with a TTL of 3 days
-cache = TTLCache(maxsize=1000, ttl=60 * 60 * 24 * 14)
+cache = TTLCache(maxsize=300, ttl=60 * 60 * 24 * 14)
 
 SCORE_THRESHOLD = 150
 FOUR_HOURS = datetime.timedelta(hours=4)
