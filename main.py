@@ -80,7 +80,15 @@ def main():
                     status_emoji = '🔥 '
                 elif delta >= TWO_DAYS:
                     status_emoji = '❄️ '
-                message = f"<b>{story.get('title')}</b> ({status_emoji}Score: {story.get('score')}+ {ago})\n\n<b>Read more: </b><a href='{story.get('url')}'>{story.get('url')}</a>\n<b>Comments: </b><a href='https://news.ycombinator.com/item?id={story_id}'>https://news.ycombinator.com/item?id={story_id}</a> \n\n<b>Brief</b>: {summary}"
+
+                message = f"""<b>{story.get('title')}</b> ({status_emoji}<b>Score:</b>{story.get('score')}+ · <i>{ago}</i>)
+
+<b>📰 Article:</b> <a href='{story.get('url')}'>Read the full story</a>  
+<b>💬 Comments:</b> <a href='https://news.ycombinator.com/item?id={story_id}'>Join the discussion</a>
+
+<b>TL;DR</b>
+{summary}
+"""
 
                 buttons = []
                 comments_count = story.get('descendants', 0)
